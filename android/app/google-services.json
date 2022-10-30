@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "802920906172",
+    "project_id": "komyuniti-9b5b4",
+    "storage_bucket": "komyuniti-9b5b4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802920906172:android:deb75220d43d17237cffb9",
+        "android_client_info": {
+          "package_name": "com.kiishidart.komyuniti"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "802920906172-4imd1ijcdgpml2ddkfaef4gtga3blqgq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8DXHo1MhGzyPzXNVbVuo6En53rrMQN8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802920906172-4imd1ijcdgpml2ddkfaef4gtga3blqgq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "802920906172-qo6cns5r2eqess5ke993pkm4ihrnuh4s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kiishidart.komyuniti"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
