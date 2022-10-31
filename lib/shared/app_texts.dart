@@ -19,4 +19,8 @@ abstract class AppTexts {
   static const String join = 'Join';
   static const String joined = 'Joined';
   static const String modTools = 'Mod Tools';
+
+  // mod tools
+ static const String addModerators = 'Add Moderators';
+ static const String editCommunity = 'Edit Komyuniti';
 }

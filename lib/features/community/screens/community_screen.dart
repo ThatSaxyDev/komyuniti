@@ -8,6 +8,7 @@ import 'package:komyuniti/shared/app_texts.dart';
 import 'package:komyuniti/shared/widgets/error_text.dart';
 import 'package:komyuniti/shared/widgets/loader.dart';
 import 'package:komyuniti/shared/widgets/spacer.dart';
+import 'package:routemaster/routemaster.dart';
 
 class CommnunityScreen extends ConsumerWidget {
   final String name;
@@ -15,6 +16,10 @@ class CommnunityScreen extends ConsumerWidget {
     super.key,
     required this.name,
   });
+
+  void navigateToModTools(BuildContext context) {
+    Routemaster.of(context).push('/mod-tools');
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,6 +34,9 @@ class CommnunityScreen extends ConsumerWidget {
                 member = 'members';
               }
               return NestedScrollView(
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics(),
+                ),
                 headerSliverBuilder: (context, innerBoxIsScrolled) {
                   return [
                     SliverAppBar(
@@ -78,7 +86,7 @@ class CommnunityScreen extends ConsumerWidget {
                                             ),
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 25.w)),
-                                        onPressed: () {},
+                                        onPressed: () => navigateToModTools(context),
                                         child: const Text(AppTexts.modTools),
                                       )
                                     : OutlinedButton(
