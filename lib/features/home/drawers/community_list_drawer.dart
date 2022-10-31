@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:komyuniti/features/community/controller/communtiy_controller.dart';
+import 'package:komyuniti/models/community_model.dart';
 import 'package:komyuniti/shared/app_images.dart';
 import 'package:komyuniti/shared/app_texts.dart';
 import 'package:komyuniti/shared/widgets/error_text.dart';
@@ -15,6 +16,10 @@ class CommunityListDrawer extends ConsumerWidget {
 
   void navigateToCreateCommunity(BuildContext context) {
     Routemaster.of(context).push('/create-community');
+  }
+
+  void navigateToCommunity(BuildContext context, Community community) {
+    Routemaster.of(context).push('/kom/${community.name}');
   }
 
   @override
@@ -32,7 +37,10 @@ class CommunityListDrawer extends ConsumerWidget {
             ListTile(
               leading: const Icon(PhosphorIcons.plus),
               title: const Text('${AppTexts.createACommunity} 👨🏾‍💻'),
-              onTap: () => navigateToCreateCommunity(context),
+              onTap: () {
+                Navigator.of(context).pop();
+                navigateToCreateCommunity(context);
+              },
             ),
             ref.watch(userCommunitiesProvider).when(
                   data: (communities) => Expanded(
@@ -45,7 +53,10 @@ class CommunityListDrawer extends ConsumerWidget {
                             backgroundImage: NetworkImage(community.avatar),
                           ),
                           title: Text('kom/${community.name}'),
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            navigateToCommunity(context, community);
+                          },
                         );
                       },
                     ),
