@@ -5,5 +5,6 @@ abstract class AppTexts {
 
   // login
   static const String skip = 'Skip';
+  static const String continuWithG = 'Continue With Google';
   
 }
