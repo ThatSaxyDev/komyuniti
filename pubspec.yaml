@@ -48,6 +48,7 @@ dependencies:
   file_picker: ^5.2.2
   loading_animation_widget: ^1.2.0+3
   routemaster: ^1.0.1
+  phosphor_flutter: ^1.4.0
 
 dev_dependencies:
   flutter_test:

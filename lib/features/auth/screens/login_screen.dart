@@ -33,7 +33,7 @@ class LoginScreen extends ConsumerWidget {
                       child: Text(
                         AppTexts.skip,
                         style: TextStyle(
-                          color: Pallete.whiteColor,
+                          // color: Pallete.whiteColor,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
                         ),

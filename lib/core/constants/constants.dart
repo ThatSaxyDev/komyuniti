@@ -9,14 +9,18 @@ class Constants {
       'https://thumbs.dreamstime.com/b/abstract-stained-pattern-rectangle-background-blue-sky-over-fiery-red-orange-color-modern-painting-art-watercolor-effe-texture-123047399.jpg';
   static const avatarDefault =
       'https://freesvg.org/img/abstract-user-flat-4.png';
+  static const communityAvatarDefault =
+      'https://mpng.subpng.com/20180426/ovq/kisspng-multi-user-encapsulated-postscript-users-group-co-5ae16d22590853.6022972915247229783647.jpg';
 
   // static const tabWidgets = [
   //   FeedScreen(),
   //   AddPostScreen(),
   // ];
 
-  static const IconData up = IconData(0xe800, fontFamily: 'MyFlutterApp', fontPackage: null);
-  static const IconData down = IconData(0xe801, fontFamily: 'MyFlutterApp', fontPackage: null);
+  static const IconData up =
+      IconData(0xe800, fontFamily: 'MyFlutterApp', fontPackage: null);
+  static const IconData down =
+      IconData(0xe801, fontFamily: 'MyFlutterApp', fontPackage: null);
 
   static const awardsPath = 'assets/images/awards';
 
