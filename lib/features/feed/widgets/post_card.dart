@@ -5,10 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:komyuniti/core/constants/constants.dart';
 import 'package:komyuniti/features/auth/controller/auth_controller.dart';
+import 'package:komyuniti/features/posts/controller/post_controller.dart';
 
 import 'package:komyuniti/models/post_model.dart';
 import 'package:komyuniti/theme/palette.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:routemaster/routemaster.dart';
 
 class PostCard extends ConsumerWidget {
   final Post post;
@@ -16,6 +18,36 @@ class PostCard extends ConsumerWidget {
     super.key,
     required this.post,
   });
+
+  void deletePost(WidgetRef ref, BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            title: const Text('Please Confirm'),
+            content: const Text('Are you sure you want to delete this post'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Routemaster.of(context).pop();
+                  ref.read(postControllerProvider.notifier).deletePost(post);
+                },
+                child: const Text(
+                  'Yes',
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Routemaster.of(context).pop();
+                },
+                child: const Text(
+                  'No',
+                ),
+              ),
+            ],
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -77,7 +109,7 @@ class PostCard extends ConsumerWidget {
                               const Spacer(),
                               if (post.uid == user.uid)
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () => deletePost(ref, context),
                                   icon: Icon(
                                     PhosphorIcons.trash,
                                     color: Pallete.redColor,
@@ -86,7 +118,7 @@ class PostCard extends ConsumerWidget {
                             ],
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 10.h),
+                            padding: EdgeInsets.only(top: 10.h, bottom: 15.h),
                             child: Text(
                               post.title,
                               style: TextStyle(
@@ -96,13 +128,18 @@ class PostCard extends ConsumerWidget {
                             ),
                           ),
                           if (isTypeImage)
-                            SizedBox(
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16.r),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    post.link!,
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                               height: MediaQuery.of(context).size.height * 0.35,
                               width: double.infinity,
-                              child: Image.network(
-                                post.link!,
-                                fit: BoxFit.cover,
-                              ),
                             ),
                           if (isTypeLink)
                             SizedBox(
@@ -129,7 +166,46 @@ class PostCard extends ConsumerWidget {
                             children: [
                               Row(
                                 children: [
-                                  IconButton(onPressed: () {}, icon: Icon(PhosphorIcons.arrowFatUp))
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      PhosphorIcons.arrowFatUpBold,
+                                      color: post.upvotes.contains(user.uid)
+                                          ? Pallete.redColor
+                                          : null,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${post.upvotes.length - post.downvotes.length == 0 ? 'Vote' : post.upvotes.length - post.downvotes.length}',
+                                    style: TextStyle(
+                                      fontSize: 17.sp,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      PhosphorIcons.arrowFatDownBold,
+                                      color: post.upvotes.contains(user.uid)
+                                          ? Pallete.blueColor
+                                          : null,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      PhosphorIcons.chatCircleDotsBold,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${post.commentCount == 0 ? 'Comment' : post.commentCount}',
+                                    style: TextStyle(
+                                      fontSize: 17.sp,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],

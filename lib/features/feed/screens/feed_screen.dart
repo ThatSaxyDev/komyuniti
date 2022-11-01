@@ -16,6 +16,7 @@ class FeedScreen extends ConsumerWidget {
           data: (communities) => ref.watch(userPostProvider(communities)).when(
                 data: (data) {
                   return ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                     itemCount: data.length,
                     itemBuilder: (context, index) {
                       final post = data[index];
