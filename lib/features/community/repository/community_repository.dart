@@ -32,6 +32,34 @@ class CommunityRepository {
     }
   }
 
+  FutureVoid joinCommunity(String communityname, String userId) async {
+    try {
+      return right(_communities.doc(communityname).update(
+        {
+          'members': FieldValue.arrayUnion([userId]),
+        },
+      ));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  FutureVoid leaveCommunity(String communityname, String userId) async {
+    try {
+      return right(_communities.doc(communityname).update(
+        {
+          'members': FieldValue.arrayRemove([userId]),
+        },
+      ));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
   Stream<List<Community>> getUserCommunities(String uid) {
     return _communities.where('members', arrayContains: uid).snapshots().map(
       (event) {
@@ -65,18 +93,22 @@ class CommunityRepository {
         .where(
           'name',
           isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
-          isLessThan: query.isEmpty ? null : query.substring(0, query.length - 1) +
-              String.fromCharCode(
-                query.codeUnitAt(query.length - 1) + 1,
-              ),
+          isLessThan: query.isEmpty
+              ? null
+              : query.substring(0, query.length - 1) +
+                  String.fromCharCode(
+                    query.codeUnitAt(query.length - 1) + 1,
+                  ),
         )
-        .snapshots().map((event) {
-          List<Community> communities = [];
-          for (var community in event.docs) {
-            communities.add(Community.fromMap(community.data() as Map<String, dynamic>));
-          }
-          return communities;
-        });
+        .snapshots()
+        .map((event) {
+      List<Community> communities = [];
+      for (var community in event.docs) {
+        communities
+            .add(Community.fromMap(community.data() as Map<String, dynamic>));
+      }
+      return communities;
+    });
   }
 
   CollectionReference get _communities =>

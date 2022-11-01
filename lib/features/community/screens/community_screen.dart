@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:komyuniti/features/auth/controller/auth_controller.dart';
 import 'package:komyuniti/features/community/controller/communtiy_controller.dart';
+import 'package:komyuniti/models/community_model.dart';
 import 'package:komyuniti/shared/app_texts.dart';
 import 'package:komyuniti/shared/widgets/error_text.dart';
 import 'package:komyuniti/shared/widgets/loader.dart';
@@ -19,6 +20,16 @@ class CommnunityScreen extends ConsumerWidget {
 
   void navigateToModTools(BuildContext context) {
     Routemaster.of(context).push('/mod-tools/$name');
+  }
+
+  void joinCommunity(
+    WidgetRef ref,
+    Community community,
+    BuildContext context,
+  ) {
+    ref
+        .read(communityControllerProvider.notifier)
+        .joinCommunity(community, context);
   }
 
   @override
@@ -86,7 +97,8 @@ class CommnunityScreen extends ConsumerWidget {
                                             ),
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 25.w)),
-                                        onPressed: () => navigateToModTools(context),
+                                        onPressed: () =>
+                                            navigateToModTools(context),
                                         child: const Text(AppTexts.modTools),
                                       )
                                     : OutlinedButton(
@@ -97,7 +109,7 @@ class CommnunityScreen extends ConsumerWidget {
                                             ),
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 25.w)),
-                                        onPressed: () {},
+                                        onPressed: () => joinCommunity(ref, community, context),
                                         child: Text(
                                             community.members.contains(user.uid)
                                                 ? AppTexts.joined
@@ -106,7 +118,7 @@ class CommnunityScreen extends ConsumerWidget {
                               ],
                             ),
                             Padding(
-                              padding: EdgeInsets.only(top: 10.h),
+                              padding: EdgeInsets.only(top: 2.h),
                               child:
                                   Text('${community.members.length} $member'),
                             ),

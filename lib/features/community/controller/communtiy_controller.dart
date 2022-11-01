@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:komyuniti/core/constants/constants.dart';
+import 'package:komyuniti/core/failure.dart';
 import 'package:komyuniti/core/providers/firebase_provider.dart';
 import 'package:komyuniti/core/providers/storage_repository_provider.dart';
 import 'package:komyuniti/core/utils.dart';
@@ -69,6 +71,29 @@ class CommunityController extends StateNotifier<bool> {
       (success) {
         showSnackBar(context, 'Komyuniti created successfully');
         Routemaster.of(context).pop();
+      },
+    );
+  }
+
+  void joinCommunity(Community community, BuildContext context) async {
+    final user = _ref.read(userProvider)!;
+
+    Either<Failure, void> res;
+
+    if (community.members.contains(user.uid)) {
+      res = await _communityRepository.leaveCommunity(community.name, user.uid);
+    } else {
+      res = await _communityRepository.joinCommunity(community.name, user.uid);
+    }
+
+    res.fold(
+      (failure) => showSnackBar(context, failure.message),
+      (success) {
+        if (community.members.contains(user.uid)) {
+          showSnackBar(context, 'You have left the komyuniti');
+        } else {
+          showSnackBar(context, 'Komyuniti joined');
+        }
       },
     );
   }
