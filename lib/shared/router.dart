@@ -8,6 +8,7 @@ import 'package:komyuniti/features/community/screens/mod_tools_screen.dart';
 import 'package:komyuniti/features/home/screens/home_screen.dart';
 import 'package:komyuniti/features/posts/screens/add_post_screen.dart';
 import 'package:komyuniti/features/posts/screens/add_post_type_screen.dart';
+import 'package:komyuniti/features/posts/screens/comments_screen.dart';
 import 'package:komyuniti/features/user_profile/screens/edit_profile_screem.dart';
 import 'package:komyuniti/features/user_profile/screens/user_profile_screen.dart';
 import 'package:routemaster/routemaster.dart';
@@ -59,6 +60,11 @@ final loggedInRoute = RouteMap(
     '/add-post/:type': (routeData) => MaterialPage(
           child: AddPostTypeScreen(
             type: routeData.pathParameters['type']!,
+          ),
+        ),
+    '/post/:postId/comments': (routeData) => MaterialPage(
+          child: CommentsScreen(
+            postId: routeData.pathParameters['postId']!,
           ),
         ),
   },

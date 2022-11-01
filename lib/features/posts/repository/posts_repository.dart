@@ -5,6 +5,7 @@ import 'package:komyuniti/core/constants/firebase_constants.dart';
 import 'package:komyuniti/core/failure.dart';
 import 'package:komyuniti/core/providers/firebase_provider.dart';
 import 'package:komyuniti/core/type_defs.dart';
+import 'package:komyuniti/models/comment_model.dart';
 import 'package:komyuniti/models/community_model.dart';
 import 'package:komyuniti/models/post_model.dart';
 
@@ -62,7 +63,7 @@ class PostRepository {
         'upvotes': FieldValue.arrayRemove([userId]),
       });
     } else {
-       _posts.doc(post.id).update({
+      _posts.doc(post.id).update({
         'upvotes': FieldValue.arrayUnion([userId]),
       });
     }
@@ -80,12 +81,32 @@ class PostRepository {
         'downvotes': FieldValue.arrayRemove([userId]),
       });
     } else {
-       _posts.doc(post.id).update({
+      _posts.doc(post.id).update({
         'downvotes': FieldValue.arrayUnion([userId]),
       });
     }
   }
 
+  Stream<Post> getPostById(String postId) {
+    return _posts
+        .doc(postId)
+        .snapshots()
+        .map((event) => Post.fromMap(event.data() as Map<String, dynamic>));
+  }
+
+  FutureVoid addComment(Comment comment) async {
+    try {
+      return right(_comments.doc(comment.id).set(comment.toMap()));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
   CollectionReference get _posts =>
       _firestore.collection(FirebaseConstants.postsCollection);
+
+  CollectionReference get _comments =>
+      _firestore.collection(FirebaseConstants.commentsCollection);
 }

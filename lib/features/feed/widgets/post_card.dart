@@ -87,6 +87,10 @@ class PostCard extends ConsumerWidget {
     Routemaster.of(context).push('/kom/${post.communityName}');
   }
 
+  void navigateToComments(BuildContext context) {
+    Routemaster.of(context).push('/post/${post.id}/comments');
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isTypeImage = post.type == 'image';
@@ -241,7 +245,8 @@ class PostCard extends ConsumerWidget {
                               Row(
                                 children: [
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed: () =>
+                                        navigateToComments(context),
                                     icon: const Icon(
                                       PhosphorIcons.chatCircleDotsBold,
                                     ),
@@ -261,7 +266,8 @@ class PostCard extends ConsumerWidget {
                                     data: (data) {
                                       if (data.mods.contains(user.uid)) {
                                         return IconButton(
-                                          onPressed: () => deletePost(ref, context),
+                                          onPressed: () =>
+                                              deletePost(ref, context),
                                           icon: const Icon(
                                             PhosphorIcons.gearSix,
                                           ),
@@ -285,6 +291,7 @@ class PostCard extends ConsumerWidget {
             ],
           ),
         ),
+        Spc(h: 10.h),
       ],
     );
   }
