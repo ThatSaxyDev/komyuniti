@@ -1,9 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:komyuniti/features/auth/controller/auth_controller.dart';
 import 'package:komyuniti/features/community/controller/communtiy_controller.dart';
+import 'package:komyuniti/features/feed/widgets/post_card.dart';
 import 'package:komyuniti/models/community_model.dart';
 import 'package:komyuniti/shared/app_texts.dart';
 import 'package:komyuniti/shared/widgets/error_text.dart';
@@ -109,7 +111,8 @@ class CommnunityScreen extends ConsumerWidget {
                                             ),
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 25.w)),
-                                        onPressed: () => joinCommunity(ref, community, context),
+                                        onPressed: () => joinCommunity(
+                                            ref, community, context),
                                         child: Text(
                                             community.members.contains(user.uid)
                                                 ? AppTexts.joined
@@ -130,9 +133,24 @@ class CommnunityScreen extends ConsumerWidget {
                     ),
                   ];
                 },
-                body: const Center(
-                  child: Text('Displaying community posts'),
-                ),
+                body: ref.watch(getCommunityPostsProvider(name)).when(
+                      data: (data) {
+                        return ListView.builder(
+                          physics: const AlwaysScrollableScrollPhysics(
+                              parent: BouncingScrollPhysics()),
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            final post = data[index];
+                            return PostCard(post: post);
+                          },
+                        );
+                      },
+                      error: (error, stackTrace) {
+                        if (kDebugMode) print(error);
+                        return ErrorText(error: error.toString());
+                      },
+                      loading: () => const Loader(),
+                    ),
               );
             },
             error: (error, stackTrace) => ErrorText(error: error.toString()),

@@ -6,6 +6,7 @@ import 'package:komyuniti/core/providers/storage_repository_provider.dart';
 import 'package:komyuniti/core/utils.dart';
 import 'package:komyuniti/features/auth/controller/auth_controller.dart';
 import 'package:komyuniti/features/user_profile/repository/user_profile_repository.dart';
+import 'package:komyuniti/models/post_model.dart';
 import 'package:komyuniti/models/user_model.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -18,6 +19,10 @@ final userProfileControllerProvider =
     storageRepository: storageRepository,
     ref: ref,
   );
+});
+
+final getUserPostsProvider = StreamProvider.family((ref, String uid) {
+  return ref.read(userProfileControllerProvider.notifier).getUserPosts(uid);
 });
 
 class UserProfileController extends StateNotifier<bool> {
@@ -77,5 +82,9 @@ class UserProfileController extends StateNotifier<bool> {
         Routemaster.of(context).pop();
       },
     );
+  }
+
+  Stream<List<Post>> getUserPosts(String uid) {
+    return _userProfileRepository.getUserPosts(uid);
   }
 }

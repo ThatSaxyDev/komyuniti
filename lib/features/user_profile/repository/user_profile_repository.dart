@@ -5,6 +5,7 @@ import 'package:komyuniti/core/constants/firebase_constants.dart';
 import 'package:komyuniti/core/failure.dart';
 import 'package:komyuniti/core/providers/firebase_provider.dart';
 import 'package:komyuniti/core/type_defs.dart';
+import 'package:komyuniti/models/post_model.dart';
 import 'package:komyuniti/models/user_model.dart';
 
 final userProfileRepositoryProvider = Provider((ref) {
@@ -26,6 +27,19 @@ class UserProfileRepository {
     }
   }
 
+  Stream<List<Post>> getUserPosts(String uid) {
+    return _posts
+        .where('uid', isEqualTo: uid)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((event) => event.docs
+            .map((e) => Post.fromMap(e.data() as Map<String, dynamic>))
+            .toList());
+  }
+
   CollectionReference get _users =>
       _firestore.collection(FirebaseConstants.usersCollection);
+
+  CollectionReference get _posts =>
+      _firestore.collection(FirebaseConstants.postsCollection);
 }
