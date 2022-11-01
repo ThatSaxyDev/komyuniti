@@ -18,6 +18,10 @@ class ModToolsScreen extends StatelessWidget {
     Routemaster.of(context).push('/edit-komyuniti/$name');
   }
 
+  void navigateToAddMods(BuildContext context) {
+    Routemaster.of(context).push('/add-mods/$name');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +35,7 @@ class ModToolsScreen extends StatelessWidget {
             ListTile(
               leading: const Icon(PhosphorIcons.userPlus),
               title: const Text(AppTexts.addModerators),
-              onTap: () {},
+              onTap: () => navigateToAddMods(context),
             ),
             ListTile(
               leading: const Icon(PhosphorIcons.pen),

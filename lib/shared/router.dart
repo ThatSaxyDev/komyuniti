@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:komyuniti/features/auth/screens/login_screen.dart';
+import 'package:komyuniti/features/community/screens/add_mods_screen.dart';
 import 'package:komyuniti/features/community/screens/community_screen.dart';
 import 'package:komyuniti/features/community/screens/create_communinity_screen.dart';
 import 'package:komyuniti/features/community/screens/edit_community_screen.dart';
@@ -23,13 +24,18 @@ final loggedInRoute = RouteMap(
             name: route.pathParameters['name']!,
           ),
         ),
-    '/mod-tools/:name': (routeDate) =>  MaterialPage(
+    '/mod-tools/:name': (routeDate) => MaterialPage(
           child: ModToolsScreen(
             name: routeDate.pathParameters['name']!,
           ),
         ),
-    '/edit-komyuniti/:name': (routeData) =>  MaterialPage(
+    '/edit-komyuniti/:name': (routeData) => MaterialPage(
           child: EditCommunityScreen(
+            name: routeData.pathParameters['name']!,
+          ),
+        ),
+    '/add-mods/:name': (routeData) => MaterialPage(
+          child: AddModsScreen(
             name: routeData.pathParameters['name']!,
           ),
         ),
