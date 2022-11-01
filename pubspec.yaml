@@ -52,6 +52,7 @@ dependencies:
   dotted_border: ^2.0.0+3
   shared_preferences: ^2.0.15
   uuid: ^3.0.6
+  any_link_preview: ^2.0.9
 
 dev_dependencies:
   flutter_test:
@@ -101,6 +102,8 @@ flutter:
           weight: 500
         - asset: lib/assets/fonts/Sk-Modernist-Regular.otf
           weight: 400
+        - asset: lib/assets/fonts/MyFlutterApp.ttf
+
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

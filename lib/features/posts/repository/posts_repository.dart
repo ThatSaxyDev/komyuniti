@@ -5,6 +5,7 @@ import 'package:komyuniti/core/constants/firebase_constants.dart';
 import 'package:komyuniti/core/failure.dart';
 import 'package:komyuniti/core/providers/firebase_provider.dart';
 import 'package:komyuniti/core/type_defs.dart';
+import 'package:komyuniti/models/community_model.dart';
 import 'package:komyuniti/models/post_model.dart';
 
 final postRepositoryProvider = Provider((ref) {
@@ -24,6 +25,19 @@ class PostRepository {
     } catch (e) {
       return left(Failure(e.toString()));
     }
+  }
+
+  Stream<List<Post>> fetchUserPosts(List<Community> communities) {
+    return _posts
+        .where('communityName',
+            whereIn: communities.map((e) => e.name).toList())
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((event) => event.docs
+            .map(
+              (e) => Post.fromMap(e.data() as Map<String, dynamic>),
+            )
+            .toList());
   }
 
   CollectionReference get _posts =>
