@@ -5,12 +5,17 @@ import 'package:komyuniti/features/auth/controller/auth_controller.dart';
 import 'package:komyuniti/shared/widgets/spacer.dart';
 import 'package:komyuniti/theme/palette.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:routemaster/routemaster.dart';
 
 class ProfileDrawer extends ConsumerWidget {
   const ProfileDrawer({super.key});
 
   void logOut(WidgetRef ref) {
     ref.read(authControllerProvider.notifier).logOut();
+  }
+
+  void navigateToUserProfile(BuildContext context, String uid) {
+    Routemaster.of(context).push('/user-profile/$uid');
   }
 
   @override
@@ -42,7 +47,7 @@ class ProfileDrawer extends ConsumerWidget {
                 title: const Text('My Profile 👨🏾‍💻'),
                 onTap: () {
                   Navigator.of(context).pop();
-                  // navigateToCreateCommunity(context);
+                  navigateToUserProfile(context, user.uid);
                 },
               ),
               Spc(h: 20.h),

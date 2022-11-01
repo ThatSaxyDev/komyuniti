@@ -122,6 +122,8 @@ class CommnunityScreen extends ConsumerWidget {
                               child:
                                   Text('${community.members.length} $member'),
                             ),
+                            Spc(h: 10.h),
+                            const Divider(thickness: 2),
                           ],
                         ),
                       ),
