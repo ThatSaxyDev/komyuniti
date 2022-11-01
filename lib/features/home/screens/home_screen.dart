@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:komyuniti/features/auth/controller/auth_controller.dart';
 import 'package:komyuniti/features/home/delegates/search_community_delegate.dart';
 import 'package:komyuniti/features/home/drawers/community_list_drawer.dart';
+import 'package:komyuniti/features/home/drawers/profile_drawer.dart';
 import 'package:komyuniti/shared/app_texts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -11,6 +12,10 @@ class HomeScreen extends ConsumerWidget {
 
   void displayDrawer(BuildContext context) {
     Scaffold.of(context).openDrawer();
+  }
+
+  void displayEndDrawer(BuildContext context) {
+    Scaffold.of(context).openEndDrawer();
   }
 
   @override
@@ -36,15 +41,20 @@ class HomeScreen extends ConsumerWidget {
                 showSearch(context: context, delegate: SearchCommunityDelegate(ref));
               },
             ),
-            IconButton(
-              icon: CircleAvatar(
-                backgroundImage: NetworkImage(user.profilePic),
-              ),
-              onPressed: () {},
+            Builder(
+              builder: (context) {
+                return IconButton(
+                  icon: CircleAvatar(
+                    backgroundImage: NetworkImage(user.profilePic),
+                  ),
+                  onPressed: () => displayEndDrawer(context),
+                );
+              }
             )
           ],
         ),
         drawer: const CommunityListDrawer(),
+        endDrawer: const ProfileDrawer(),
         body: const SizedBox());
   }
 }
