@@ -123,7 +123,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                                   Constants.bannerDefault
                                           ? Center(
                                               child: Icon(
-                                                PhosphorIcons.camera,
+                                                PhosphorIcons.image,
                                                 size: 40.h,
                                               ),
                                             )

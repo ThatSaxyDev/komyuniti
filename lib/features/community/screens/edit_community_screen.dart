@@ -109,7 +109,7 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
                                               Constants.bannerDefault
                                       ? Center(
                                           child: Icon(
-                                            PhosphorIcons.camera,
+                                            PhosphorIcons.image,
                                             size: 40.h,
                                           ),
                                         )

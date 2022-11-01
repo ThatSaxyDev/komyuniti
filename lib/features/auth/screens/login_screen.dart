@@ -60,9 +60,9 @@ class LoginScreen extends ConsumerWidget {
                             child: Image.asset(AppIcons.googleIcon),
                           ),
                         ),
-                        const Text(
+                        Text(
                           AppTexts.continuWithG,
-                          style: TextStyle(fontSize: 17),
+                          style: TextStyle(fontSize: 17.sp),
                         ),
                       ],
                     ),

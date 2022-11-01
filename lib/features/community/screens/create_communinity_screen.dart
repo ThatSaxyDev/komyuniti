@@ -14,7 +14,7 @@ import 'package:komyuniti/theme/palette.dart';
 final communityControllerProvider =
     StateNotifierProvider<CommunityController, bool>((ref) {
   final communityRepository = ref.watch(communityRepositoryProvider);
-  final storageRepository = ref.watch(storageRepositoryProvider); //TODO: confirm this
+  final storageRepository = ref.watch(storageRepositoryProvider); 
   return CommunityController(
     communityRepository: communityRepository,
     storageRepository: storageRepository,
