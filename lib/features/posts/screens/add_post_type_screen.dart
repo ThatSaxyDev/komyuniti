@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:komyuniti/core/utils.dart';
 import 'package:komyuniti/features/community/controller/communtiy_controller.dart';
+import 'package:komyuniti/features/posts/controller/post_controller.dart';
 import 'package:komyuniti/models/community_model.dart';
 import 'package:komyuniti/shared/app_constants.dart';
 import 'package:komyuniti/shared/widgets/button.dart';
@@ -54,12 +55,46 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
     }
   }
 
+  void sharePost() {
+    if (widget.type == 'image' &&
+        bannerFile != null &&
+        titleController.text.isNotEmpty) {
+      ref.read(postControllerProvider.notifier).shareImagePost(
+            context: context,
+            title: titleController.text.trim(),
+            selectedCommunity: selectedCommunity ?? communities[0],
+            file: bannerFile,
+          );
+    } else if (widget.type == 'text' &&
+        titleController.text.isNotEmpty &&
+        textPostController.text.isNotEmpty) {
+      ref.read(postControllerProvider.notifier).shareTextPost(
+            context: context,
+            title: titleController.text.trim(),
+            selectedCommunity: selectedCommunity ?? communities[0],
+            description: textPostController.text.trim(),
+          );
+    } else if (widget.type == 'link' &&
+        titleController.text.isNotEmpty &&
+        linktController.text.isNotEmpty) {
+      ref.read(postControllerProvider.notifier).shareLinkPost(
+            context: context,
+            title: titleController.text.trim(),
+            selectedCommunity: selectedCommunity ?? communities[0],
+            link: linktController.text.trim(),
+          );
+    } else {
+      showSnackBar(context, 'Please enter all fields');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isTypeImage = widget.type == 'image';
     final isTypeLink = widget.type == 'link';
     final isTypeText = widget.type == 'text';
     final currentTheme = ref.watch(themeNotifierProvider);
+    final isLoading = ref.watch(postControllerProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -214,14 +249,16 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
                       loading: () => const Loader(),
                     ),
                 Spc(h: 100.h),
-                BButton(
-                  height: 60.h,
-                  width: double.infinity,
-                  radius: 10.r,
-                  onTap: () {},
-                  color: Pallete.greyColor,
-                  item: const Text('Komyunikate!'),
-                ),
+                isLoading
+                    ? const Loader()
+                    : BButton(
+                        height: 60.h,
+                        width: double.infinity,
+                        radius: 10.r,
+                        onTap: sharePost,
+                        color: Pallete.greyColor,
+                        item: const Text('Komyunikate!'),
+                      ),
                 // Spc(h: 60.h),
               ],
             ),
