@@ -10,6 +10,8 @@ import 'package:komyuniti/models/post_model.dart';
 import 'package:komyuniti/models/user_model.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../../../core/enums/enums.dart';
+
 final userProfileControllerProvider =
     StateNotifierProvider<UserProfileController, bool>((ref) {
   final userProfileRepository = ref.watch(userProfileRepositoryProvider);
@@ -86,5 +88,16 @@ class UserProfileController extends StateNotifier<bool> {
 
   Stream<List<Post>> getUserPosts(String uid) {
     return _userProfileRepository.getUserPosts(uid);
+  }
+
+  void updateUserKoinz(UserKarma koinz) async {
+    UserModel user = _ref.read(userProvider)!;
+    user = user.copyWith(karma: user.karma + koinz.karma);
+
+    final res = await _userProfileRepository.updateUserKoinz(user);
+    res.fold(
+      (l) => null,
+      (r) => _ref.read(userProvider.notifier).update((state) => user),
+    );
   }
 }

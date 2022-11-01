@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:komyuniti/core/enums/enums.dart';
 import 'package:komyuniti/core/providers/firebase_provider.dart';
 import 'package:komyuniti/core/providers/storage_repository_provider.dart';
 import 'package:komyuniti/core/utils.dart';
 import 'package:komyuniti/features/auth/controller/auth_controller.dart';
 import 'package:komyuniti/features/posts/repository/posts_repository.dart';
+import 'package:komyuniti/features/user_profile/controller/user_profile_controller.dart';
 import 'package:komyuniti/models/comment_model.dart';
 import 'package:komyuniti/models/community_model.dart';
 import 'package:komyuniti/models/post_model.dart';
@@ -35,6 +37,12 @@ final getPostByIdProvider = StreamProvider.family((ref, String postId) {
   final postController = ref.watch(postControllerProvider.notifier);
 
   return postController.getPostById(postId);
+});
+
+final getPostCommentsProvider = StreamProvider.family((ref, String postId) {
+  final postController = ref.watch(postControllerProvider.notifier);
+
+  return postController.getCommentsOfPost(postId);
 });
 
 class PostController extends StateNotifier<bool> {
@@ -77,6 +85,7 @@ class PostController extends StateNotifier<bool> {
     );
 
     final res = await _postRepository.addPost(post);
+    _ref.read(userProfileControllerProvider.notifier).updateUserKoinz(UserKarma.textPost);
     state = false;
     res.fold(
       (l) => showSnackBar(context, l.message),
@@ -114,6 +123,7 @@ class PostController extends StateNotifier<bool> {
     );
 
     final res = await _postRepository.addPost(post);
+    _ref.read(userProfileControllerProvider.notifier).updateUserKoinz(UserKarma.linkPost);
     state = false;
     res.fold(
       (l) => showSnackBar(context, l.message),
@@ -159,6 +169,7 @@ class PostController extends StateNotifier<bool> {
         );
 
         final res = await _postRepository.addPost(post);
+        _ref.read(userProfileControllerProvider.notifier).updateUserKoinz(UserKarma.imagePost);
         state = false;
         res.fold(
           (l) => showSnackBar(context, l.message),
@@ -180,6 +191,7 @@ class PostController extends StateNotifier<bool> {
 
   void deletePost(Post post, BuildContext context) async {
     final res = await _postRepository.deletePost(post);
+    _ref.read(userProfileControllerProvider.notifier).updateUserKoinz(UserKarma.deletePost);
     res.fold(
       (l) => null,
       (r) => showSnackBar(context, 'Deleted!'),
@@ -216,9 +228,14 @@ class PostController extends StateNotifier<bool> {
       profilePic: user.profilePic,
     );
     final res = await _postRepository.addComment(comment);
+    _ref.read(userProfileControllerProvider.notifier).updateUserKoinz(UserKarma.comment);
     res.fold(
       (l) => showSnackBar(context, l.message),
       (r) => null,
     );
+  }
+
+  Stream<List<Comment>> getCommentsOfPost(String postId) {
+    return _postRepository.getCommentsOfPost(postId);
   }
 }

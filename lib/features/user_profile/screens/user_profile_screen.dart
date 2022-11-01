@@ -92,7 +92,7 @@ class UserProfileScreen extends ConsumerWidget {
                             ),
                             Padding(
                               padding: EdgeInsets.only(top: 10.h),
-                              child: Text('${user.karma} karma'),
+                              child: Text('${user.karma} koinz'),
                             ),
                             Spc(h: 10.h),
                             const Divider(thickness: 2),
