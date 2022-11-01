@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:komyuniti/core/providers/firebase_provider.dart';
+import 'package:komyuniti/core/providers/storage_repository_provider.dart';
 import 'package:komyuniti/features/community/controller/communtiy_controller.dart';
 import 'package:komyuniti/features/community/repository/community_repository.dart';
 import 'package:komyuniti/shared/app_texts.dart';
@@ -13,8 +14,10 @@ import 'package:komyuniti/theme/palette.dart';
 final communityControllerProvider =
     StateNotifierProvider<CommunityController, bool>((ref) {
   final communityRepository = ref.watch(communityRepositoryProvider);
+  final storageRepository = ref.watch(storageRepositoryProvider); //TODO: confirm this
   return CommunityController(
     communityRepository: communityRepository,
+    storageRepository: storageRepository,
     ref: ref,
   );
 });

@@ -18,7 +18,7 @@ class CommnunityScreen extends ConsumerWidget {
   });
 
   void navigateToModTools(BuildContext context) {
-    Routemaster.of(context).push('/mod-tools');
+    Routemaster.of(context).push('/mod-tools/$name');
   }
 
   @override
