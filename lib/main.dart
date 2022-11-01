@@ -56,7 +56,7 @@ class _MyAppState extends ConsumerState<MyApp> {
             builder: (context, child) {
               return MaterialApp.router(
                 title: AppTexts.appName,
-                theme: Pallete.darkModeAppTheme,
+                theme: ref.watch(themeNotifierProvider),
                 debugShowCheckedModeBanner: false,
                 routerDelegate: RoutemasterDelegate(routesBuilder: (context) {
                   if (data != null) {

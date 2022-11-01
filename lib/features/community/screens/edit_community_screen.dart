@@ -64,14 +64,20 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading =  ref.watch(communityControllerProvider);
+    final isLoading = ref.watch(communityControllerProvider);
+    final currenTheme = ref.watch(themeNotifierProvider);
     return ref.watch(getCommunityByNameProvider(widget.name)).when(
           data: (community) => Scaffold(
-            backgroundColor: Pallete.darkModeAppTheme.backgroundColor,
+            backgroundColor: currenTheme.backgroundColor,
             appBar: AppBar(
               elevation: 0,
               centerTitle: true,
-              title: const Text(AppTexts.editCommunity),
+              title: Text(
+                AppTexts.editCommunity,
+                style: TextStyle(
+                  color: currenTheme.textTheme.bodyText2!.color!,
+                ),
+              ),
             ),
             body: Padding(
               padding: EdgeInsets.symmetric(horizontal: 25.w),
@@ -89,8 +95,7 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
                             radius: Radius.circular(15.r),
                             dashPattern: const [10, 4],
                             strokeCap: StrokeCap.round,
-                            color: Pallete
-                                .darkModeAppTheme.textTheme.bodyText2!.color!,
+                            color: currenTheme.textTheme.bodyText2!.color!,
                             child: Container(
                               width: double.infinity,
                               height: 150.h,
@@ -133,15 +138,16 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
                     ),
                   ),
                   const Spacer(),
-                  isLoading ? const Loader() : 
-                  BButton(
-                    height: 60.h,
-                    width: double.infinity,
-                    radius: 10.r,
-                    onTap: () => save(community),
-                    color: Pallete.greyColor,
-                    item: const Text('Save'),
-                  ),
+                  isLoading
+                      ? const Loader()
+                      : BButton(
+                          height: 60.h,
+                          width: double.infinity,
+                          radius: 10.r,
+                          onTap: () => save(community),
+                          color: Pallete.greyColor,
+                          item: const Text('Save'),
+                        ),
                   Spc(h: 60.h),
                 ],
               ),

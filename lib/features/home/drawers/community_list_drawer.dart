@@ -38,7 +38,7 @@ class CommunityListDrawer extends ConsumerWidget {
               Spc(h: 10.h),
               ListTile(
                 leading: const Icon(PhosphorIcons.plus),
-                title: const Text('${AppTexts.createACommunity} 👨🏾‍💻'),
+                title: const Text(AppTexts.createACommunity),
                 onTap: () {
                   Navigator.of(context).pop();
                   navigateToCreateCommunity(context);
