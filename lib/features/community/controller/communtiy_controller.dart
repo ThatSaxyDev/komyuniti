@@ -84,6 +84,7 @@ class CommunityController extends StateNotifier<bool> {
     required Community community,
     required File? bannerFile,
   }) async {
+    state = true;
     if (profileFile != null) {
       // store file in communities/profile/memes
       final res = await _storageRepository.storeFile(
@@ -111,7 +112,7 @@ class CommunityController extends StateNotifier<bool> {
     }
 
     final res = await _communityRepository.editCommunity(community);
-
+    state = false;
     res.fold(
       (l) => showSnackBar(context, l.message),
       (r) {

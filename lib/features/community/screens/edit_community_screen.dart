@@ -64,6 +64,7 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading =  ref.watch(communityControllerProvider);
     return ref.watch(getCommunityByNameProvider(widget.name)).when(
           data: (community) => Scaffold(
             backgroundColor: Pallete.darkModeAppTheme.backgroundColor,
@@ -132,6 +133,7 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
                     ),
                   ),
                   const Spacer(),
+                  isLoading ? const Loader() : 
                   BButton(
                     height: 60.h,
                     width: double.infinity,
