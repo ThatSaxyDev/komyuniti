@@ -5,9 +5,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:komyuniti/core/constants/constants.dart';
 import 'package:komyuniti/features/auth/controller/auth_controller.dart';
+import 'package:komyuniti/features/community/controller/communtiy_controller.dart';
 import 'package:komyuniti/features/posts/controller/post_controller.dart';
 
 import 'package:komyuniti/models/post_model.dart';
+import 'package:komyuniti/shared/widgets/error_text.dart';
+import 'package:komyuniti/shared/widgets/loader.dart';
+import 'package:komyuniti/shared/widgets/spacer.dart';
 import 'package:komyuniti/theme/palette.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:routemaster/routemaster.dart';
@@ -30,23 +34,57 @@ class PostCard extends ConsumerWidget {
               TextButton(
                 onPressed: () {
                   Routemaster.of(context).pop();
-                  ref.read(postControllerProvider.notifier).deletePost(post);
+                  ref
+                      .read(postControllerProvider.notifier)
+                      .deletePost(post, context);
                 },
-                child: const Text(
+                child: Text(
                   'Yes',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: ref
+                        .watch(themeNotifierProvider)
+                        .textTheme
+                        .bodyText2!
+                        .color!,
+                  ),
                 ),
               ),
               TextButton(
                 onPressed: () {
                   Routemaster.of(context).pop();
                 },
-                child: const Text(
+                child: Text(
                   'No',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: ref
+                        .watch(themeNotifierProvider)
+                        .textTheme
+                        .bodyText2!
+                        .color!,
+                  ),
                 ),
               ),
             ],
           );
         });
+  }
+
+  void upvotePost(WidgetRef ref) async {
+    ref.read(postControllerProvider.notifier).upvote(post);
+  }
+
+  void downvotePost(WidgetRef ref) async {
+    ref.read(postControllerProvider.notifier).downvote(post);
+  }
+
+  void navigateToUser(BuildContext context) {
+    Routemaster.of(context).push('/user-profile/${post.uid}');
+  }
+
+  void navigateToCommunity(BuildContext context) {
+    Routemaster.of(context).push('/kom/${post.communityName}');
   }
 
   @override
@@ -74,16 +112,19 @@ class PostCard extends ConsumerWidget {
                       padding: EdgeInsets.symmetric(
                         vertical: 4.h,
                         horizontal: 16.w,
-                      ).copyWith(right: 0),
+                      ).copyWith(right: 15.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
-                              CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(post.communityProfilePic),
-                                radius: 16.w,
+                              GestureDetector(
+                                onTap: () => navigateToCommunity(context),
+                                child: CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(post.communityProfilePic),
+                                  radius: 16.w,
+                                ),
                               ),
                               Padding(
                                 padding: EdgeInsets.only(left: 10.w),
@@ -97,10 +138,13 @@ class PostCard extends ConsumerWidget {
                                         fontSize: 16.sp,
                                       ),
                                     ),
-                                    Text(
-                                      'yu/${post.username}',
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
+                                    GestureDetector(
+                                      onTap: () => navigateToUser(context),
+                                      child: Text(
+                                        'yu/${post.username}',
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -142,9 +186,9 @@ class PostCard extends ConsumerWidget {
                               width: double.infinity,
                             ),
                           if (isTypeLink)
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.15,
-                              width: double.infinity,
+                            Container(
+                              height: 150.h,
+                              padding: EdgeInsets.symmetric(horizontal: 10.w),
                               child: AnyLinkPreview(
                                 displayDirection:
                                     UIDirection.uiDirectionHorizontal,
@@ -162,16 +206,18 @@ class PostCard extends ConsumerWidget {
                                 ),
                               ),
                             ),
+                          Spc(h: 5.h),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed: () => upvotePost(ref),
                                     icon: Icon(
                                       PhosphorIcons.arrowFatUpBold,
                                       color: post.upvotes.contains(user.uid)
-                                          ? Pallete.redColor
+                                          ? Pallete.blueColor
                                           : null,
                                     ),
                                   ),
@@ -182,11 +228,11 @@ class PostCard extends ConsumerWidget {
                                     ),
                                   ),
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed: () => downvotePost(ref),
                                     icon: Icon(
                                       PhosphorIcons.arrowFatDownBold,
-                                      color: post.upvotes.contains(user.uid)
-                                          ? Pallete.blueColor
+                                      color: post.downvotes.contains(user.uid)
+                                          ? Pallete.redColor
                                           : null,
                                     ),
                                   ),
@@ -208,6 +254,26 @@ class PostCard extends ConsumerWidget {
                                   ),
                                 ],
                               ),
+                              ref
+                                  .watch(getCommunityByNameProvider(
+                                      post.communityName))
+                                  .when(
+                                    data: (data) {
+                                      if (data.mods.contains(user.uid)) {
+                                        return IconButton(
+                                          onPressed: () => deletePost(ref, context),
+                                          icon: const Icon(
+                                            PhosphorIcons.gearSix,
+                                          ),
+                                        );
+                                      } else {
+                                        return const Spc();
+                                      }
+                                    },
+                                    error: (error, stackTrace) =>
+                                        ErrorText(error: error.toString()),
+                                    loading: () => const Loader(),
+                                  ),
                             ],
                           ),
                         ],
