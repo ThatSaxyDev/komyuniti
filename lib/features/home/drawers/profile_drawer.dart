@@ -34,7 +34,7 @@ class ProfileDrawer extends ConsumerWidget {
               ),
               Spc(h: 20.h),
               Text(
-                user.name,
+                'yu/${user.name}',
                 style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
               ),
               Spc(h: 10.h),

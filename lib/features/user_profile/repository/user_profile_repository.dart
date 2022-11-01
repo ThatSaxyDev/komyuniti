@@ -7,7 +7,7 @@ import 'package:komyuniti/core/providers/firebase_provider.dart';
 import 'package:komyuniti/core/type_defs.dart';
 import 'package:komyuniti/models/user_model.dart';
 
-final userRepositoryProvider = Provider((ref) {
+final userProfileRepositoryProvider = Provider((ref) {
   return UserProfileRepository(firestore: ref.watch(firestoreProvider));
 });
 

@@ -5,6 +5,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:komyuniti/features/user_profile/controller/user_profile_controller.dart';
 import 'package:komyuniti/shared/app_constants.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -37,7 +38,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    usernameController = TextEditingController(text: ref.read(userProvider)!.name);
+    usernameController =
+        TextEditingController(text: ref.read(userProvider)!.name);
   }
 
   @override
@@ -66,11 +68,20 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     }
   }
 
+  void save() {
+    ref.read(userProfileControllerProvider.notifier).editUserProfile(
+          context: context,
+          profileFile: profileFile,
+          bannerFile: bannerFile,
+          name: usernameController.text.trim(),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // final isLoading =  ref.watch(communityControllerProvider);
+    final isLoading = ref.watch(userProfileControllerProvider);
     return ref.watch(getUserProvider(widget.uid)).when(
-          data: (community) => Scaffold(
+          data: (user) => Scaffold(
             backgroundColor: Pallete.darkModeAppTheme.backgroundColor,
             appBar: AppBar(
               elevation: 0,
@@ -96,8 +107,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                 radius: Radius.circular(15.r),
                                 dashPattern: const [10, 4],
                                 strokeCap: StrokeCap.round,
-                                color: Pallete
-                                    .darkModeAppTheme.textTheme.bodyText2!.color!,
+                                color: Pallete.darkModeAppTheme.textTheme
+                                    .bodyText2!.color!,
                                 child: Container(
                                   width: double.infinity,
                                   height: 150.h,
@@ -106,8 +117,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                   ),
                                   child: bannerFile != null
                                       ? Image.file(bannerFile!)
-                                      : community.banner.isEmpty ||
-                                              community.banner ==
+                                      : user.banner.isEmpty ||
+                                              user.banner ==
                                                   Constants.bannerDefault
                                           ? Center(
                                               child: Icon(
@@ -115,7 +126,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                                 size: 40.h,
                                               ),
                                             )
-                                          : Image.network(community.banner),
+                                          : Image.network(user.banner),
                                 ),
                               ),
                             ),
@@ -126,12 +137,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                 onTap: selectProfileImage,
                                 child: profileFile != null
                                     ? CircleAvatar(
-                                        backgroundImage: FileImage(profileFile!),
+                                        backgroundImage:
+                                            FileImage(profileFile!),
                                         radius: 32.r,
                                       )
                                     : CircleAvatar(
                                         backgroundImage:
-                                            NetworkImage(community.profilePic),
+                                            NetworkImage(user.profilePic),
                                         radius: 32.r,
                                       ),
                               ),
@@ -165,16 +177,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         maxLength: 16,
                       ),
                       Spc(h: 250.h),
-                      // isLoading ? const Loader() :
-                      BButton(
-                        height: 60.h,
-                        width: double.infinity,
-                        radius: 10.r,
-                        onTap: () {},
-                        color: Pallete.greyColor,
-                        item: const Text('Save'),
-                      ),
-                      
+                      isLoading
+                          ? const Loader()
+                          : BButton(
+                              height: 60.h,
+                              width: double.infinity,
+                              radius: 10.r,
+                              onTap: () => save(),
+                              color: Pallete.greyColor,
+                              item: const Text('Save'),
+                            ),
                     ],
                   ),
                 ),
