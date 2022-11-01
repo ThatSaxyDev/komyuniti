@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:komyuniti/features/auth/controller/auth_controller.dart';
+import 'package:komyuniti/features/home/delegates/search_community_delegate.dart';
 import 'package:komyuniti/features/home/drawers/community_list_drawer.dart';
 import 'package:komyuniti/shared/app_texts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -31,7 +32,9 @@ class HomeScreen extends ConsumerWidget {
           actions: [
             IconButton(
               icon: const Icon(PhosphorIcons.magnifyingGlass),
-              onPressed: () {},
+              onPressed: () {
+                showSearch(context: context, delegate: SearchCommunityDelegate(ref));
+              },
             ),
             IconButton(
               icon: CircleAvatar(
@@ -41,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
             )
           ],
         ),
-        drawer: CommunityListDrawer(),
-        body: SizedBox());
+        drawer: const CommunityListDrawer(),
+        body: const SizedBox());
   }
 }
