@@ -85,7 +85,9 @@ class PostController extends StateNotifier<bool> {
     );
 
     final res = await _postRepository.addPost(post);
-    _ref.read(userProfileControllerProvider.notifier).updateUserKoinz(UserKarma.textPost);
+    _ref
+        .read(userProfileControllerProvider.notifier)
+        .updateUserKoinz(UserKarma.textPost);
     state = false;
     res.fold(
       (l) => showSnackBar(context, l.message),
@@ -123,7 +125,9 @@ class PostController extends StateNotifier<bool> {
     );
 
     final res = await _postRepository.addPost(post);
-    _ref.read(userProfileControllerProvider.notifier).updateUserKoinz(UserKarma.linkPost);
+    _ref
+        .read(userProfileControllerProvider.notifier)
+        .updateUserKoinz(UserKarma.linkPost);
     state = false;
     res.fold(
       (l) => showSnackBar(context, l.message),
@@ -169,7 +173,9 @@ class PostController extends StateNotifier<bool> {
         );
 
         final res = await _postRepository.addPost(post);
-        _ref.read(userProfileControllerProvider.notifier).updateUserKoinz(UserKarma.imagePost);
+        _ref
+            .read(userProfileControllerProvider.notifier)
+            .updateUserKoinz(UserKarma.imagePost);
         state = false;
         res.fold(
           (l) => showSnackBar(context, l.message),
@@ -191,7 +197,9 @@ class PostController extends StateNotifier<bool> {
 
   void deletePost(Post post, BuildContext context) async {
     final res = await _postRepository.deletePost(post);
-    _ref.read(userProfileControllerProvider.notifier).updateUserKoinz(UserKarma.deletePost);
+    _ref
+        .read(userProfileControllerProvider.notifier)
+        .updateUserKoinz(UserKarma.deletePost);
     res.fold(
       (l) => null,
       (r) => showSnackBar(context, 'Deleted!'),
@@ -228,7 +236,9 @@ class PostController extends StateNotifier<bool> {
       profilePic: user.profilePic,
     );
     final res = await _postRepository.addComment(comment);
-    _ref.read(userProfileControllerProvider.notifier).updateUserKoinz(UserKarma.comment);
+    _ref
+        .read(userProfileControllerProvider.notifier)
+        .updateUserKoinz(UserKarma.comment);
     res.fold(
       (l) => showSnackBar(context, l.message),
       (r) => null,
@@ -237,5 +247,29 @@ class PostController extends StateNotifier<bool> {
 
   Stream<List<Comment>> getCommentsOfPost(String postId) {
     return _postRepository.getCommentsOfPost(postId);
+  }
+
+  void awardPost({
+    required Post post,
+    required String award,
+    required BuildContext context,
+  }) async {
+    final user = _ref.read(userProvider)!;
+
+    final res = await _postRepository.awardPost(post, award, user.uid);
+
+    res.fold(
+      (l) => showSnackBar(context, l.message),
+      (r) {
+        _ref
+            .read(userProfileControllerProvider.notifier)
+            .updateUserKoinz(UserKarma.awardPost);
+        _ref.read(userProvider.notifier).update((state) {
+          state?.awards.remove(award);
+          return state;
+        });
+        Routemaster.of(context).pop();
+      },
+    );
   }
 }
