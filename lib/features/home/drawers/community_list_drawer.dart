@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:komyuniti/features/auth/controller/auth_controller.dart';
 import 'package:komyuniti/features/community/controller/communtiy_controller.dart';
 import 'package:komyuniti/models/community_model.dart';
+import 'package:komyuniti/shared/app_icons.dart';
 import 'package:komyuniti/shared/app_images.dart';
 import 'package:komyuniti/shared/app_texts.dart';
+import 'package:komyuniti/shared/widgets/button.dart';
 import 'package:komyuniti/shared/widgets/error_text.dart';
 import 'package:komyuniti/shared/widgets/loader.dart';
 import 'package:komyuniti/shared/widgets/spacer.dart';
+import 'package:komyuniti/theme/palette.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -24,6 +28,9 @@ class CommunityListDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider)!;
+    final isGuest = !user.isAuthenticated;
+
     return Drawer(
       child: SafeArea(
         child: Padding(
@@ -36,37 +43,59 @@ class CommunityListDrawer extends ConsumerWidget {
                 child: Image.asset(AppImages.appLogo),
               ),
               Spc(h: 10.h),
-              ListTile(
-                leading: const Icon(PhosphorIcons.plus),
-                title: const Text(AppTexts.createACommunity),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  navigateToCreateCommunity(context);
-                },
-              ),
-              ref.watch(userCommunitiesProvider).when(
-                    data: (communities) => Expanded(
-                      child: ListView.builder(
-                        itemCount: communities.length,
-                        itemBuilder: (context, index) {
-                          final community = communities[index];
-                          return ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage(community.avatar),
+              isGuest
+                  ? GButton(
+                      padding: 17.h,
+                      color: Pallete.greyColor,
+                      item: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 30.w,
+                            child: Hero(
+                              tag: 'hero',
+                              child: Image.asset(AppIcons.googleIcon),
                             ),
-                            title: Text('kom/${community.name}'),
-                            onTap: () {
-                              Navigator.of(context).pop();
-                              navigateToCommunity(context, community);
-                            },
-                          );
-                        },
+                          ),
+                          Text(
+                            AppTexts.continuWithG,
+                            style: TextStyle(fontSize: 17.sp),
+                          ),
+                        ],
                       ),
+                    )
+                  : ListTile(
+                      leading: const Icon(PhosphorIcons.plus),
+                      title: const Text(AppTexts.createACommunity),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        navigateToCreateCommunity(context);
+                      },
                     ),
-                    error: (error, stackTrace) =>
-                        ErrorText(error: error.toString()),
-                    loading: () => const Loader(),
-                  ),
+              if (!isGuest)
+                ref.watch(userCommunitiesProvider).when(
+                      data: (communities) => Expanded(
+                        child: ListView.builder(
+                          itemCount: communities.length,
+                          itemBuilder: (context, index) {
+                            final community = communities[index];
+                            return ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage: NetworkImage(community.avatar),
+                              ),
+                              title: Text('kom/${community.name}'),
+                              onTap: () {
+                                Navigator.of(context).pop();
+                                navigateToCommunity(context, community);
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      error: (error, stackTrace) =>
+                          ErrorText(error: error.toString()),
+                      loading: () => const Loader(),
+                    ),
             ],
           ),
         ),

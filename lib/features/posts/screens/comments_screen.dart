@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:komyuniti/features/auth/controller/auth_controller.dart';
 import 'package:komyuniti/features/feed/widgets/post_card.dart';
 
 import 'package:komyuniti/features/posts/controller/post_controller.dart';
@@ -44,6 +45,8 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider)!;
+    final isGuest = !user.isAuthenticated;
     return Scaffold(
       appBar: AppBar(),
       body: ref.watch(getPostByIdProvider(widget.postId)).when(
@@ -51,6 +54,7 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
               return Column(
                 children: [
                   PostCard(post: data),
+                  if (!isGuest)
                   TextField(
                     onSubmitted: (val) => addComment(data),
                     controller: commentController,

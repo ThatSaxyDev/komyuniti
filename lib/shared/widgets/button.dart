@@ -101,11 +101,13 @@ class GButton extends ConsumerWidget {
   // final void Function()? onTap;
   final Color color;
   final Widget item;
+  final bool isFromLogin;
   const GButton({
     Key? key,
     // required this.height,
     // required this.width,
     this.padding = 30,
+    this.isFromLogin = true,
     // required this.radius,
     // required this.onTap,
     required this.color,
@@ -113,13 +115,13 @@ class GButton extends ConsumerWidget {
   }) : super(key: key);
 
   void signInWithGoogle(BuildContext context, WidgetRef ref) {
-    ref.read(authControllerProvider.notifier).signInWithGoogle(context);
+    ref.read(authControllerProvider.notifier).signInWithGoogle(context, isFromLogin);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
-      height: 60,
+      height: 60.h,
       // width: width,
       child: ElevatedButton(
         onPressed: () => signInWithGoogle(context, ref),

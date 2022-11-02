@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:komyuniti/core/constants/constants.dart';
+import 'package:komyuniti/core/utils.dart';
 import 'package:komyuniti/features/auth/controller/auth_controller.dart';
 import 'package:komyuniti/features/community/controller/communtiy_controller.dart';
 import 'package:komyuniti/features/posts/controller/post_controller.dart';
@@ -106,6 +107,8 @@ class PostCard extends ConsumerWidget {
     final isTypeText = post.type == 'text';
     final currentTheme = ref.watch(themeNotifierProvider);
     final user = ref.watch(userProvider)!;
+
+    final isGuest = !user.isAuthenticated;
     // final isLoading = ref.watch(postControllerProvider);
 
     return Column(
@@ -242,7 +245,12 @@ class PostCard extends ConsumerWidget {
                               Row(
                                 children: [
                                   IconButton(
-                                    onPressed: () => upvotePost(ref),
+                                    onPressed: isGuest
+                                        ? () {
+                                            showSnackBar(context,
+                                                'Sign in with google to upvote');
+                                          }
+                                        : () => upvotePost(ref),
                                     icon: Icon(
                                       PhosphorIcons.arrowFatUpBold,
                                       color: post.upvotes.contains(user.uid)
@@ -257,7 +265,12 @@ class PostCard extends ConsumerWidget {
                                     ),
                                   ),
                                   IconButton(
-                                    onPressed: () => downvotePost(ref),
+                                    onPressed: isGuest
+                                        ? () {
+                                            showSnackBar(context,
+                                                'Sign in with google to downvote');
+                                          }
+                                        : () => downvotePost(ref),
                                     icon: Icon(
                                       PhosphorIcons.arrowFatDownBold,
                                       color: post.downvotes.contains(user.uid)
@@ -306,35 +319,43 @@ class PostCard extends ConsumerWidget {
                                     loading: () => const Loader(),
                                   ),
                               IconButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => Dialog(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(20.w),
-                                        child: GridView.builder(
-                                          shrinkWrap: true,
-                                          gridDelegate:
-                                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 4,
+                                onPressed: isGuest
+                                    ? () {
+                                        showSnackBar(context,
+                                            'Sign in with google to award posts');
+                                      }
+                                    : () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => Dialog(
+                                            child: Padding(
+                                              padding: EdgeInsets.all(20.w),
+                                              child: GridView.builder(
+                                                shrinkWrap: true,
+                                                gridDelegate:
+                                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisCount: 4,
+                                                ),
+                                                itemCount: user.awards.length,
+                                                itemBuilder: (context, index) {
+                                                  final award =
+                                                      user.awards[index];
+                                                  return GestureDetector(
+                                                    onTap: () => awardPost(
+                                                        ref, award, context),
+                                                    child: Padding(
+                                                        padding: EdgeInsets.all(
+                                                            10.w),
+                                                        child: Image.asset(
+                                                            Constants.awards[
+                                                                award]!)),
+                                                  );
+                                                },
+                                              ),
+                                            ),
                                           ),
-                                          itemCount: user.awards.length,
-                                          itemBuilder: (context, index) {
-                                            final award = user.awards[index];
-                                            return GestureDetector(
-                                              onTap: () => awardPost(
-                                                  ref, award, context),
-                                              child: Padding(
-                                                  padding: EdgeInsets.all(10.w),
-                                                  child: Image.asset(Constants
-                                                      .awards[award]!)),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
+                                        );
+                                      },
                                 icon: const Icon(PhosphorIcons.gift),
                               ),
                             ],

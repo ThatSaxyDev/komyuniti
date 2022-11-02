@@ -41,6 +41,18 @@ class PostRepository {
             .toList());
   }
 
+  Stream<List<Post>> fetchGuestPosts() {
+    return _posts
+        .orderBy('createdAt', descending: true)
+        .limit(10)
+        .snapshots()
+        .map((event) => event.docs
+            .map(
+              (e) => Post.fromMap(e.data() as Map<String, dynamic>),
+            )
+            .toList());
+  }
+
   FutureVoid deletePost(Post post) async {
     try {
       return right(_posts.doc(post.id).delete());
@@ -143,6 +155,6 @@ class PostRepository {
   CollectionReference get _comments =>
       _firestore.collection(FirebaseConstants.commentsCollection);
 
-      CollectionReference get _users =>
+  CollectionReference get _users =>
       _firestore.collection(FirebaseConstants.usersCollection);
 }

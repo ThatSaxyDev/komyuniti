@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:komyuniti/core/utils.dart';
 import 'package:komyuniti/features/auth/controller/auth_controller.dart';
 import 'package:komyuniti/features/feed/screens/feed_screen.dart';
 import 'package:komyuniti/features/home/delegates/search_community_delegate.dart';
@@ -28,6 +29,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
+    final isGuest = !user.isAuthenticated;
     final currenTheme = ref.watch(themeNotifierProvider);
     return Scaffold(
       appBar: AppBar(
@@ -64,11 +66,15 @@ class HomeScreen extends ConsumerWidget {
         ],
       ),
       drawer: const CommunityListDrawer(),
-      endDrawer: const ProfileDrawer(),
+      endDrawer: isGuest ? null : const ProfileDrawer(),
       body: const FeedScreen(),
       floatingActionButton: FloatingActionButton(
         backgroundColor: currenTheme.textTheme.bodyText2!.color!,
-        onPressed: () => navigateToAddPost(context),
+        onPressed: () {
+          isGuest
+              ? showSnackBar(context, 'Sign in with google to share content')
+              : navigateToAddPost(context);
+        },
         child: const Icon(PhosphorIcons.pen),
       ),
     );

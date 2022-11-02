@@ -37,6 +37,7 @@ class CommnunityScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
+    final isGuest = !user.isAuthenticated;
     String member;
     return Scaffold(
       body: ref.watch(getCommunityByNameProvider(name)).when(
@@ -90,6 +91,7 @@ class CommnunityScreen extends ConsumerWidget {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                if (!isGuest)
                                 community.mods.contains(user.uid)
                                     ? OutlinedButton(
                                         style: ElevatedButton.styleFrom(
