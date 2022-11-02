@@ -14,6 +14,13 @@ import 'package:komyuniti/theme/palette.dart';
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
+  void signInAsGuest(
+    WidgetRef ref,
+    BuildContext context,
+  ) {
+    ref.read(authControllerProvider.notifier).signInAsGuest(context);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(authControllerProvider);
@@ -29,12 +36,12 @@ class LoginScreen extends ConsumerWidget {
                   Align(
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () => signInAsGuest(ref, context),
                       child: Text(
                         AppTexts.skip,
                         style: TextStyle(
                           // color: Pallete.whiteColor,
-                          fontSize: 16.sp,
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
