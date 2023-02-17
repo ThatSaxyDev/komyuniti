@@ -25,9 +25,13 @@ class Loader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currenTheme = ref.watch(themeNotifierProvider);
     return Center(
-      child: LoadingAnimationWidget.halfTriangleDot(
-         color: currenTheme.textTheme.bodyText2!.color!,
-        size: 60.w,
+      child: SizedBox(
+        height: 60.h,
+        width: 60.w,
+        child: LoadingAnimationWidget.halfTriangleDot(
+           color: currenTheme.textTheme.bodyText2!.color!,
+          size: 60.w,
+        ),
       ),
     );
   }

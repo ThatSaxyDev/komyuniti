@@ -28,6 +28,7 @@ class UserProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentTheme = ref.watch(themeNotifierProvider);
     return Scaffold(
       body: ref.watch(getUserProvider(uid)).when(
             data: (user) {
@@ -62,12 +63,18 @@ class UserProfileScreen extends ConsumerWidget {
                             alignment: Alignment.bottomLeft,
                             padding: EdgeInsets.all(13.w),
                             child: BButton(
-                              height: 35.h,
-                              width: 120.w,
+                              height: 40.h,
+                              width: 130.w,
                               radius: 20.r,
                               onTap: () => navigateToEditProfile(context),
-                              color: Pallete.blackColor,
-                              item: const Text('Edit Profile'),
+                              color: currentTheme.backgroundColor,
+                              item: Text(
+                                'Edit Profile',
+                                style: TextStyle(
+                                  color:
+                                      currentTheme.textTheme.bodyText2!.color!,
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -105,6 +112,7 @@ class UserProfileScreen extends ConsumerWidget {
                 body: ref.watch(getUserPostsProvider(uid)).when(
                       data: (data) {
                         return ListView.builder(
+                          padding: EdgeInsets.zero,
                           physics: const AlwaysScrollableScrollPhysics(
                               parent: BouncingScrollPhysics()),
                           itemCount: data.length,

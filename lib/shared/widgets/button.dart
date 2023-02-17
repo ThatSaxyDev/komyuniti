@@ -94,8 +94,8 @@ class TransparentButton extends StatelessWidget {
 }
 
 class GButton extends ConsumerWidget {
-  // final double height;
-  // final double width;
+  final double? height;
+  final double? width;
   final double padding;
   // final double radius;
   // final void Function()? onTap;
@@ -104,8 +104,8 @@ class GButton extends ConsumerWidget {
   final bool isFromLogin;
   const GButton({
     Key? key,
-    // required this.height,
-    // required this.width,
+    this.height,
+    this.width,
     this.padding = 30,
     this.isFromLogin = true,
     // required this.radius,
@@ -115,14 +115,16 @@ class GButton extends ConsumerWidget {
   }) : super(key: key);
 
   void signInWithGoogle(BuildContext context, WidgetRef ref) {
-    ref.read(authControllerProvider.notifier).signInWithGoogle(context, isFromLogin);
+    ref
+        .read(authControllerProvider.notifier)
+        .signInWithGoogle(context, isFromLogin);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
-      height: 60.h,
-      // width: width,
+      height: height ?? 60.h,
+      width: width ?? double.infinity, 
       child: ElevatedButton(
         onPressed: () => signInWithGoogle(context, ref),
         style: ElevatedButton.styleFrom(

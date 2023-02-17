@@ -12,7 +12,7 @@ abstract class AppTexts {
 
   // create community
   static const String communityName = 'Komyuniti Name';
-  static const String communityHintText = 'kom/Komyuniti_name';
+  static const String communityHintText = 'Komyuniti_name';
   static const String createCommunity = 'Kreate komyuniti';
 
   // community screen

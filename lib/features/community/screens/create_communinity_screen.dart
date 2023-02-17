@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:komyuniti/core/providers/firebase_provider.dart';
@@ -14,7 +15,7 @@ import 'package:komyuniti/theme/palette.dart';
 final communityControllerProvider =
     StateNotifierProvider<CommunityController, bool>((ref) {
   final communityRepository = ref.watch(communityRepositoryProvider);
-  final storageRepository = ref.watch(storageRepositoryProvider); 
+  final storageRepository = ref.watch(storageRepositoryProvider);
   return CommunityController(
     communityRepository: communityRepository,
     storageRepository: storageRepository,
@@ -72,8 +73,17 @@ class _CreateCommunityScreenState extends ConsumerState<CreateCommunityScreen> {
                   ),
                   Spc(h: 15.h),
                   TextField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(RegExp(' '))
+                    ],
                     controller: communityNameController,
+                    onChanged: (value) {
+                      communityNameController.value = TextEditingValue(
+                          text: value.toLowerCase(),
+                          selection: communityNameController.selection);
+                    },
                     decoration: InputDecoration(
+                        prefixText: 'kom/',
                         hintText: AppTexts.communityHintText,
                         hintStyle: TextStyle(fontSize: 13.sp),
                         filled: true,

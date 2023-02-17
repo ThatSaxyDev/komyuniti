@@ -10,6 +10,7 @@ import 'package:komyuniti/features/community/controller/communtiy_controller.dar
 import 'package:komyuniti/features/posts/controller/post_controller.dart';
 
 import 'package:komyuniti/models/post_model.dart';
+import 'package:komyuniti/responsive/responsive.dart';
 import 'package:komyuniti/shared/widgets/error_text.dart';
 import 'package:komyuniti/shared/widgets/loader.dart';
 import 'package:komyuniti/shared/widgets/spacer.dart';
@@ -111,25 +112,29 @@ class PostCard extends ConsumerWidget {
     final isGuest = !user.isAuthenticated;
     // final isLoading = ref.watch(postControllerProvider);
 
-    return Column(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: currentTheme.drawerTheme.backgroundColor,
-          ),
-          padding: EdgeInsets.symmetric(vertical: 10.h),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 4.h,
-                        horizontal: 16.w,
-                      ).copyWith(right: 15.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      decoration: BoxDecoration(
+          color: currentTheme.drawerTheme.backgroundColor,
+          border: Border(
+              bottom: BorderSide(
+            color: Colors.grey,
+          ))),
+      padding: EdgeInsets.symmetric(vertical: 10.h),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 4.h,
+                    horizontal: 16.w,
+                  ).copyWith(right: 15.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
@@ -138,7 +143,7 @@ class PostCard extends ConsumerWidget {
                                 child: CircleAvatar(
                                   backgroundImage:
                                       NetworkImage(post.communityProfilePic),
-                                  radius: 16.w,
+                                  radius: 16,
                                 ),
                               ),
                               Padding(
@@ -165,212 +170,207 @@ class PostCard extends ConsumerWidget {
                                   ],
                                 ),
                               ),
-                              const Spacer(),
-                              if (post.uid == user.uid)
-                                IconButton(
-                                  onPressed: () => deletePost(ref, context),
-                                  icon: Icon(
-                                    PhosphorIcons.trash,
-                                    color: Pallete.redColor,
-                                  ),
-                                ),
                             ],
                           ),
-                          if (post.awards.isNotEmpty) ...[
-                            Spc(h: 5.h),
-                            SizedBox(
-                              height: 25.h,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: post.awards.length,
-                                itemBuilder: (context, index) {
-                                  final award = post.awards[index];
-                                  return Image.asset(
-                                    Constants.awards[award]!,
-                                    height: 23.h,
-                                  );
-                                },
+
+                          // const Spacer(),
+                          if (post.uid == user.uid)
+                            IconButton(
+                              onPressed: () => deletePost(ref, context),
+                              icon: Icon(
+                                PhosphorIcons.trash,
+                                color: Pallete.redColor,
                               ),
                             ),
-                          ],
-                          Padding(
-                            padding: EdgeInsets.only(top: 10.h, bottom: 15.h),
-                            child: Text(
-                              post.title,
-                              style: TextStyle(
-                                fontSize: 19.sp,
-                                fontWeight: FontWeight.bold,
+                        ],
+                      ),
+                      if (post.awards.isNotEmpty) ...[
+                        Spc(h: 5.h),
+                        SizedBox(
+                          height: 25.h,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: post.awards.length,
+                            itemBuilder: (context, index) {
+                              final award = post.awards[index];
+                              return Image.asset(
+                                Constants.awards[award]!,
+                                height: 23.h,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                      Padding(
+                        padding: EdgeInsets.only(top: 10.h, bottom: 15.h),
+                        child: Text(
+                          post.title,
+                          style: TextStyle(
+                            fontSize: 19.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      if (isTypeImage)
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16.r),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                post.link!,
                               ),
+                              fit: BoxFit.cover,
                             ),
                           ),
-                          if (isTypeImage)
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16.r),
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                    post.link!,
-                                  ),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              height: MediaQuery.of(context).size.height * 0.35,
-                              width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.35,
+                          width: double.infinity,
+                        ),
+                      if (isTypeLink)
+                        Container(
+                          height: 150.h,
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: AnyLinkPreview(
+                            displayDirection: UIDirection.uiDirectionHorizontal,
+                            link: post.link!,
+                          ),
+                        ),
+                      if (isTypeText)
+                        Container(
+                          alignment: Alignment.bottomLeft,
+                          padding: EdgeInsets.symmetric(horizontal: 15.w),
+                          child: Text(
+                            post.description!,
+                            style: TextStyle(
+                              color: currentTheme.textTheme.bodyText2!.color!,
                             ),
-                          if (isTypeLink)
-                            Container(
-                              height: 150.h,
-                              padding: EdgeInsets.symmetric(horizontal: 10.w),
-                              child: AnyLinkPreview(
-                                displayDirection:
-                                    UIDirection.uiDirectionHorizontal,
-                                link: post.link!,
-                              ),
-                            ),
-                          if (isTypeText)
-                            Container(
-                              alignment: Alignment.bottomLeft,
-                              padding: EdgeInsets.symmetric(horizontal: 15.w),
-                              child: Text(
-                                post.description!,
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                          Spc(h: 5.h),
+                          ),
+                        ),
+                      Spc(h: 5.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: isGuest
-                                        ? () {
-                                            showSnackBar(context,
-                                                'Sign in with google to upvote');
-                                          }
-                                        : () => upvotePost(ref),
-                                    icon: Icon(
-                                      PhosphorIcons.arrowFatUpBold,
-                                      color: post.upvotes.contains(user.uid)
-                                          ? Pallete.blueColor
-                                          : null,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${post.upvotes.length - post.downvotes.length == 0 ? 'Vote' : post.upvotes.length - post.downvotes.length}',
-                                    style: TextStyle(
-                                      fontSize: 17.sp,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: isGuest
-                                        ? () {
-                                            showSnackBar(context,
-                                                'Sign in with google to downvote');
-                                          }
-                                        : () => downvotePost(ref),
-                                    icon: Icon(
-                                      PhosphorIcons.arrowFatDownBold,
-                                      color: post.downvotes.contains(user.uid)
-                                          ? Pallete.redColor
-                                          : null,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () =>
-                                        navigateToComments(context),
-                                    icon: const Icon(
-                                      PhosphorIcons.chatCircleDotsBold,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${post.commentCount == 0 ? 'Comment' : post.commentCount}',
-                                    style: TextStyle(
-                                      fontSize: 17.sp,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              ref
-                                  .watch(getCommunityByNameProvider(
-                                      post.communityName))
-                                  .when(
-                                    data: (data) {
-                                      if (data.mods.contains(user.uid)) {
-                                        return IconButton(
-                                          onPressed: () =>
-                                              deletePost(ref, context),
-                                          icon: const Icon(
-                                            PhosphorIcons.gearSix,
-                                          ),
-                                        );
-                                      } else {
-                                        return const Spc();
-                                      }
-                                    },
-                                    error: (error, stackTrace) =>
-                                        ErrorText(error: error.toString()),
-                                    loading: () => const Loader(),
-                                  ),
                               IconButton(
                                 onPressed: isGuest
                                     ? () {
                                         showSnackBar(context,
-                                            'Sign in with google to award posts');
+                                            'Sign in with google to upvote');
                                       }
-                                    : () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => Dialog(
-                                            child: Padding(
-                                              padding: EdgeInsets.all(20.w),
-                                              child: GridView.builder(
-                                                shrinkWrap: true,
-                                                gridDelegate:
-                                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                                  crossAxisCount: 4,
-                                                ),
-                                                itemCount: user.awards.length,
-                                                itemBuilder: (context, index) {
-                                                  final award =
-                                                      user.awards[index];
-                                                  return GestureDetector(
-                                                    onTap: () => awardPost(
-                                                        ref, award, context),
-                                                    child: Padding(
-                                                        padding: EdgeInsets.all(
-                                                            10.w),
-                                                        child: Image.asset(
-                                                            Constants.awards[
-                                                                award]!)),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                icon: const Icon(PhosphorIcons.gift),
+                                    : () => upvotePost(ref),
+                                icon: Icon(
+                                  PhosphorIcons.arrowFatUpBold,
+                                  color: post.upvotes.contains(user.uid)
+                                      ? Pallete.blueColor
+                                      : null,
+                                ),
+                              ),
+                              Text(
+                                '${post.upvotes.length - post.downvotes.length == 0 ? 'Vote' : post.upvotes.length - post.downvotes.length}',
+                                style: TextStyle(
+                                  fontSize: 17.sp,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: isGuest
+                                    ? () {
+                                        showSnackBar(context,
+                                            'Sign in with google to downvote');
+                                      }
+                                    : () => downvotePost(ref),
+                                icon: Icon(
+                                  PhosphorIcons.arrowFatDownBold,
+                                  color: post.downvotes.contains(user.uid)
+                                      ? Pallete.redColor
+                                      : null,
+                                ),
                               ),
                             ],
                           ),
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () => navigateToComments(context),
+                                icon: const Icon(
+                                  PhosphorIcons.chatCircleDotsBold,
+                                ),
+                              ),
+                              Text(
+                                '${post.commentCount == 0 ? '' : post.commentCount}',
+                                style: TextStyle(
+                                  fontSize: 17.sp,
+                                ),
+                              ),
+                            ],
+                          ),
+                          ref
+                              .watch(getCommunityByNameProvider(
+                                  post.communityName))
+                              .when(
+                                data: (data) {
+                                  if (data.mods.contains(user.uid)) {
+                                    return IconButton(
+                                      onPressed: () => deletePost(ref, context),
+                                      icon: const Icon(
+                                        PhosphorIcons.gearSix,
+                                      ),
+                                    );
+                                  } else {
+                                    return const Spc();
+                                  }
+                                },
+                                error: (error, stackTrace) =>
+                                    ErrorText(error: error.toString()),
+                                loading: () => const Loader(),
+                              ),
+                          IconButton(
+                            onPressed: isGuest
+                                ? () {
+                                    showSnackBar(context,
+                                        'Sign in with google to award posts');
+                                  }
+                                : () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => Dialog(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(20.w),
+                                          child: GridView.builder(
+                                            shrinkWrap: true,
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 4,
+                                            ),
+                                            itemCount: user.awards.length,
+                                            itemBuilder: (context, index) {
+                                              final award = user.awards[index];
+                                              return GestureDetector(
+                                                onTap: () => awardPost(
+                                                    ref, award, context),
+                                                child: Padding(
+                                                    padding:
+                                                        EdgeInsets.all(10.w),
+                                                    child: Image.asset(Constants
+                                                        .awards[award]!)),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                            icon: const Icon(PhosphorIcons.gift),
+                          ),
                         ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        Spc(h: 10.h),
-      ],
+        ],
+      ),
     );
   }
 }

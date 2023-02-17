@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:komyuniti/features/auth/controller/auth_controller.dart';
+import 'package:komyuniti/responsive/responsive.dart';
 import 'package:komyuniti/shared/app_constants.dart';
 import 'package:komyuniti/shared/app_icons.dart';
 import 'package:komyuniti/shared/app_images.dart';
@@ -32,44 +33,41 @@ class LoginScreen extends ConsumerWidget {
             ? const Loader()
             : Column(
                 children: [
-                  Spc(h: 50.h),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () => signInAsGuest(ref, context),
-                      child: Text(
-                        AppTexts.skip,
-                        style: TextStyle(
-                          // color: Pallete.whiteColor,
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Spc(h: 15.h),
+                  Spc(h: 100.h),
+                  // Align(
+                  //   alignment: Alignment.centerRight,
+                  //   child: GestureDetector(
+                  //     onTap: () => signInAsGuest(ref, context),
+                  //     child: Text(
+                  //       AppTexts.skip,
+                  //       style: TextStyle(
+                  //         // color: Pallete.whiteColor,
+                  //         fontSize: 18.sp,
+                  //         fontWeight: FontWeight.w600,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // Spc(h: 15.h),
                   SizedBox(
-                    height: width(context),
-                    width: double.infinity,
+                    height: 300.h,
+                    width: 250.w,
                     child: Image.asset(AppImages.appLogo),
                   ),
                   Spc(h: 60.h),
                   GButton(
-                    padding: 60,
+                    padding: 10.h,
                     color: Pallete.greyColor,
                     item: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         SizedBox(
-                          width: 30,
-                          child: Hero(
-                            tag: 'hero',
-                            child: Image.asset(AppIcons.googleIcon),
-                          ),
+                          width: 30.w,
+                          child: Image.asset(AppIcons.googleIcon),
                         ),
                         Text(
                           AppTexts.continuWithG,
-                          style: TextStyle(fontSize: 17.sp),
+                          style: TextStyle(fontSize: 14.sp),
                         ),
                       ],
                     ),
