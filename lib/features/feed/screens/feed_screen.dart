@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:komyuniti/features/auth/controller/auth_controller.dart';
 import 'package:komyuniti/features/community/controller/communtiy_controller.dart';
+import 'package:komyuniti/features/feed/widgets/neo_post_card.dart';
 import 'package:komyuniti/features/feed/widgets/post_card.dart';
 import 'package:komyuniti/features/posts/controller/post_controller.dart';
 import 'package:komyuniti/shared/widgets/error_text.dart';

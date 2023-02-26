@@ -7,6 +7,7 @@ import 'package:komyuniti/features/feed/screens/feed_screen.dart';
 import 'package:komyuniti/features/home/delegates/search_community_delegate.dart';
 import 'package:komyuniti/features/home/drawers/community_list_drawer.dart';
 import 'package:komyuniti/features/home/drawers/profile_drawer.dart';
+import 'package:komyuniti/features/home/widgets/circular_fab.dart';
 import 'package:komyuniti/shared/app_texts.dart';
 import 'package:komyuniti/shared/widgets/spacer.dart';
 import 'package:komyuniti/theme/palette.dart';
@@ -40,7 +41,7 @@ class HomeScreen extends ConsumerWidget {
         title: Text(
           AppTexts.appName,
           style: TextStyle(
-            color: currenTheme.textTheme.bodyText2!.color!,
+            color: currenTheme.textTheme.bodyMedium!.color!,
           ),
         ),
         leading: Builder(builder: (context) {
@@ -73,15 +74,7 @@ class HomeScreen extends ConsumerWidget {
       drawer: const CommunityListDrawer(),
       endDrawer: isGuest ? null : const ProfileDrawer(),
       body: const FeedScreen(),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: currenTheme.textTheme.bodyText2!.color!,
-        onPressed: () {
-          isGuest
-              ? showSnackBar(context, 'Sign in with google to share content')
-              : navigateToAddPost(context);
-        },
-        child: const Icon(PhosphorIcons.pen),
-      ),
+      floatingActionButton: CircularFAB(),
     );
   }
 }

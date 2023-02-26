@@ -52,10 +52,7 @@ class CommunityListDrawer extends ConsumerWidget {
                         children: [
                           SizedBox(
                             width: 30.w,
-                            child: Hero(
-                              tag: 'hero',
-                              child: Image.asset(AppIcons.googleIcon),
-                            ),
+                            child: Image.asset(AppIcons.googleIcon),
                           ),
                           Text(
                             AppTexts.continuWithG,

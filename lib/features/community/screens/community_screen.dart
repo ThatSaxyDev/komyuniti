@@ -138,6 +138,7 @@ class CommnunityScreen extends ConsumerWidget {
                 body: ref.watch(getCommunityPostsProvider(name)).when(
                       data: (data) {
                         return ListView.builder(
+                          padding: EdgeInsets.zero,
                           physics: const AlwaysScrollableScrollPhysics(
                               parent: BouncingScrollPhysics()),
                           itemCount: data.length,

@@ -77,6 +77,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         );
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(userProfileControllerProvider);
@@ -109,7 +111,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                 dashPattern: const [10, 4],
                                 strokeCap: StrokeCap.round,
                                 color: currenTheme.textTheme
-                                    .bodyText2!.color!,
+                                    .bodyMedium!.color!,
                                 child: Container(
                                   width: double.infinity,
                                   height: 150.h,

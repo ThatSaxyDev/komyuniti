@@ -4,7 +4,6 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:komyuniti/core/utils.dart';
 import 'package:komyuniti/features/community/controller/communtiy_controller.dart';
 import 'package:komyuniti/features/posts/controller/post_controller.dart';
@@ -100,7 +99,7 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
         title: Text(
           'Post ${widget.type}',
           style: TextStyle(
-            color: currentTheme.textTheme.bodyText2!.color!,
+            color: currentTheme.textTheme.bodyMedium!.color!,
           ),
         ),
       ),
@@ -141,7 +140,7 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
                       radius: Radius.circular(15.r),
                       dashPattern: const [10, 4],
                       strokeCap: StrokeCap.round,
-                      color: currentTheme.textTheme.bodyText2!.color!,
+                      color: currentTheme.textTheme.bodyMedium!.color!,
                       child: Container(
                         width: double.infinity,
                         height: 200.h,

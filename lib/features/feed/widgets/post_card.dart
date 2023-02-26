@@ -47,7 +47,7 @@ class PostCard extends ConsumerWidget {
                     color: ref
                         .watch(themeNotifierProvider)
                         .textTheme
-                        .bodyText2!
+                        .bodyMedium!
                         .color!,
                   ),
                 ),
@@ -63,7 +63,7 @@ class PostCard extends ConsumerWidget {
                     color: ref
                         .watch(themeNotifierProvider)
                         .textTheme
-                        .bodyText2!
+                        .bodyMedium!
                         .color!,
                   ),
                 ),
@@ -112,264 +112,287 @@ class PostCard extends ConsumerWidget {
     final isGuest = !user.isAuthenticated;
     // final isLoading = ref.watch(postControllerProvider);
 
-    return Container(
-      decoration: BoxDecoration(
-          color: currentTheme.drawerTheme.backgroundColor,
-          border: Border(
-              bottom: BorderSide(
-            color: Colors.grey,
-          ))),
-      padding: EdgeInsets.symmetric(vertical: 10.h),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 4.h,
-                    horizontal: 16.w,
-                  ).copyWith(right: 15.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () => navigateToCommunity(context),
-                                child: CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(post.communityProfilePic),
-                                  radius: 16,
+    return InkWell(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      // onTap: () => navigateToComments(context),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        decoration: BoxDecoration(
+            color: currentTheme.drawerTheme.backgroundColor,
+            border: Border.all(
+              color: currentTheme.textTheme.bodyMedium!.color!,
+            ),
+            boxShadow: [
+              BoxShadow(
+                  color: currentTheme.textTheme.bodyMedium!.color!,
+                  offset: const Offset(5, 5)),
+            ],
+            borderRadius: BorderRadius.circular(5.r)),
+        padding: EdgeInsets.symmetric(vertical: 10.h),
+        margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 4.h,
+                      horizontal: 16.w,
+                    ).copyWith(right: 15.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () => navigateToCommunity(context),
+                                  child: CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(post.communityProfilePic),
+                                    radius: 16,
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 10.w),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'kom/${post.communityName}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16.sp,
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () => navigateToUser(context),
-                                      child: Text(
-                                        'yu/${post.username}',
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10.w),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'kom/${post.communityName}',
                                         style: TextStyle(
-                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.sp,
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          // const Spacer(),
-                          if (post.uid == user.uid)
-                            IconButton(
-                              onPressed: () => deletePost(ref, context),
-                              icon: Icon(
-                                PhosphorIcons.trash,
-                                color: Pallete.redColor,
-                              ),
-                            ),
-                        ],
-                      ),
-                      if (post.awards.isNotEmpty) ...[
-                        Spc(h: 5.h),
-                        SizedBox(
-                          height: 25.h,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: post.awards.length,
-                            itemBuilder: (context, index) {
-                              final award = post.awards[index];
-                              return Image.asset(
-                                Constants.awards[award]!,
-                                height: 23.h,
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                      Padding(
-                        padding: EdgeInsets.only(top: 10.h, bottom: 15.h),
-                        child: Text(
-                          post.title,
-                          style: TextStyle(
-                            fontSize: 19.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      if (isTypeImage)
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16.r),
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                post.link!,
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          height: MediaQuery.of(context).size.height * 0.35,
-                          width: double.infinity,
-                        ),
-                      if (isTypeLink)
-                        Container(
-                          height: 150.h,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w),
-                          child: AnyLinkPreview(
-                            displayDirection: UIDirection.uiDirectionHorizontal,
-                            link: post.link!,
-                          ),
-                        ),
-                      if (isTypeText)
-                        Container(
-                          alignment: Alignment.bottomLeft,
-                          padding: EdgeInsets.symmetric(horizontal: 15.w),
-                          child: Text(
-                            post.description!,
-                            style: TextStyle(
-                              color: currentTheme.textTheme.bodyText2!.color!,
-                            ),
-                          ),
-                        ),
-                      Spc(h: 5.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              IconButton(
-                                onPressed: isGuest
-                                    ? () {
-                                        showSnackBar(context,
-                                            'Sign in with google to upvote');
-                                      }
-                                    : () => upvotePost(ref),
-                                icon: Icon(
-                                  PhosphorIcons.arrowFatUpBold,
-                                  color: post.upvotes.contains(user.uid)
-                                      ? Pallete.blueColor
-                                      : null,
-                                ),
-                              ),
-                              Text(
-                                '${post.upvotes.length - post.downvotes.length == 0 ? 'Vote' : post.upvotes.length - post.downvotes.length}',
-                                style: TextStyle(
-                                  fontSize: 17.sp,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: isGuest
-                                    ? () {
-                                        showSnackBar(context,
-                                            'Sign in with google to downvote');
-                                      }
-                                    : () => downvotePost(ref),
-                                icon: Icon(
-                                  PhosphorIcons.arrowFatDownBold,
-                                  color: post.downvotes.contains(user.uid)
-                                      ? Pallete.redColor
-                                      : null,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              IconButton(
-                                onPressed: () => navigateToComments(context),
-                                icon: const Icon(
-                                  PhosphorIcons.chatCircleDotsBold,
-                                ),
-                              ),
-                              Text(
-                                '${post.commentCount == 0 ? '' : post.commentCount}',
-                                style: TextStyle(
-                                  fontSize: 17.sp,
-                                ),
-                              ),
-                            ],
-                          ),
-                          ref
-                              .watch(getCommunityByNameProvider(
-                                  post.communityName))
-                              .when(
-                                data: (data) {
-                                  if (data.mods.contains(user.uid)) {
-                                    return IconButton(
-                                      onPressed: () => deletePost(ref, context),
-                                      icon: const Icon(
-                                        PhosphorIcons.gearSix,
-                                      ),
-                                    );
-                                  } else {
-                                    return const Spc();
-                                  }
-                                },
-                                error: (error, stackTrace) =>
-                                    ErrorText(error: error.toString()),
-                                loading: () => const Loader(),
-                              ),
-                          IconButton(
-                            onPressed: isGuest
-                                ? () {
-                                    showSnackBar(context,
-                                        'Sign in with google to award posts');
-                                  }
-                                : () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => Dialog(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(20.w),
-                                          child: GridView.builder(
-                                            shrinkWrap: true,
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 4,
-                                            ),
-                                            itemCount: user.awards.length,
-                                            itemBuilder: (context, index) {
-                                              final award = user.awards[index];
-                                              return GestureDetector(
-                                                onTap: () => awardPost(
-                                                    ref, award, context),
-                                                child: Padding(
-                                                    padding:
-                                                        EdgeInsets.all(10.w),
-                                                    child: Image.asset(Constants
-                                                        .awards[award]!)),
-                                              );
-                                            },
+                                      Spc(h: 2.h),
+                                      GestureDetector(
+                                        onTap: () => navigateToUser(context),
+                                        child: Text(
+                                          'yu/${post.username}',
+                                          style: TextStyle(
+                                            fontSize: 12.sp,
                                           ),
                                         ),
                                       ),
-                                    );
-                                  },
-                            icon: const Icon(PhosphorIcons.gift),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            // const Spacer(),
+                            if (post.uid == user.uid)
+                              IconButton(
+                                onPressed: () => deletePost(ref, context),
+                                icon: Icon(
+                                  PhosphorIcons.trash,
+                                  color: Pallete.redColor,
+                                ),
+                              ),
+                          ],
+                        ),
+                        Spc(h: 6.h),
+                        Divider(
+                          color: currentTheme.textTheme.bodyMedium!.color!,
+                        ),
+                        if (post.awards.isNotEmpty) ...[
+                          Spc(h: 5.h),
+                          SizedBox(
+                            height: 25.h,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: post.awards.length,
+                              itemBuilder: (context, index) {
+                                final award = post.awards[index];
+                                return Image.asset(
+                                  Constants.awards[award]!,
+                                  height: 23.h,
+                                );
+                              },
+                            ),
                           ),
                         ],
-                      ),
-                    ],
+                        Padding(
+                          padding: EdgeInsets.only(top: 6.h, bottom: 15.h),
+                          child: Text(
+                            post.title,
+                            style: TextStyle(
+                              fontSize: 19.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        if (isTypeImage)
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16.r),
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  post.link!,
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            height: MediaQuery.of(context).size.height * 0.35,
+                            width: double.infinity,
+                          ),
+                        if (isTypeLink)
+                          Container(
+                            height: 150.h,
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
+                            child: AnyLinkPreview(
+                              displayDirection:
+                                  UIDirection.uiDirectionHorizontal,
+                              link: post.link!,
+                            ),
+                          ),
+                        if (isTypeText)
+                          Container(
+                            alignment: Alignment.bottomLeft,
+                            padding: EdgeInsets.symmetric(horizontal: 15.w),
+                            child: Text(
+                              post.description!,
+                              style: TextStyle(
+                                color:
+                                    currentTheme.textTheme.bodyMedium!.color!,
+                              ),
+                            ),
+                          ),
+                        Spc(h: 5.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                IconButton(
+                                  onPressed: isGuest
+                                      ? () {
+                                          showSnackBar(context,
+                                              'Sign in with google to upvote');
+                                        }
+                                      : () => upvotePost(ref),
+                                  icon: Icon(
+                                    PhosphorIcons.arrowFatUpBold,
+                                    color: post.upvotes.contains(user.uid)
+                                        ? Pallete.blueColor
+                                        : null,
+                                  ),
+                                ),
+                                Text(
+                                  '${post.upvotes.length - post.downvotes.length == 0 ? 'Vote' : post.upvotes.length - post.downvotes.length}',
+                                  style: TextStyle(
+                                    fontSize: 17.sp,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: isGuest
+                                      ? () {
+                                          showSnackBar(context,
+                                              'Sign in with google to downvote');
+                                        }
+                                      : () => downvotePost(ref),
+                                  icon: Icon(
+                                    PhosphorIcons.arrowFatDownBold,
+                                    color: post.downvotes.contains(user.uid)
+                                        ? Pallete.redColor
+                                        : null,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () => navigateToComments(context),
+                                  icon: const Icon(
+                                    PhosphorIcons.chatCircleDotsBold,
+                                  ),
+                                ),
+                                Text(
+                                  '${post.commentCount == 0 ? '' : post.commentCount}',
+                                  style: TextStyle(
+                                    fontSize: 17.sp,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            ref
+                                .watch(getCommunityByNameProvider(
+                                    post.communityName))
+                                .when(
+                                  data: (data) {
+                                    if (data.mods.contains(user.uid)) {
+                                      return IconButton(
+                                        onPressed: () =>
+                                            deletePost(ref, context),
+                                        icon: const Icon(
+                                          PhosphorIcons.gearSix,
+                                        ),
+                                      );
+                                    } else {
+                                      return const Spc();
+                                    }
+                                  },
+                                  error: (error, stackTrace) =>
+                                      ErrorText(error: error.toString()),
+                                  loading: () => const Loader(),
+                                ),
+                            IconButton(
+                              onPressed: isGuest
+                                  ? () {
+                                      showSnackBar(context,
+                                          'Sign in with google to award posts');
+                                    }
+                                  : () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => Dialog(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(20.w),
+                                            child: GridView.builder(
+                                              shrinkWrap: true,
+                                              gridDelegate:
+                                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 4,
+                                              ),
+                                              itemCount: user.awards.length,
+                                              itemBuilder: (context, index) {
+                                                final award =
+                                                    user.awards[index];
+                                                return GestureDetector(
+                                                  onTap: () => awardPost(
+                                                      ref, award, context),
+                                                  child: Padding(
+                                                      padding:
+                                                          EdgeInsets.all(10.w),
+                                                      child: Image.asset(
+                                                          Constants
+                                                              .awards[award]!)),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                              icon: const Icon(PhosphorIcons.gift),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

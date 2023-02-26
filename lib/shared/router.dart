@@ -54,9 +54,9 @@ final loggedInRoute = RouteMap(
             uid: routeData.pathParameters['uid']!,
           ),
         ),
-    '/add-post': (_) => const MaterialPage(
-          child: AddPostScreen(),
-        ),
+    // '/add-post': (_) => const MaterialPage(
+    //       child: AddPostScreen(),
+    //     ),
     '/add-post/:type': (routeData) => MaterialPage(
           child: AddPostTypeScreen(
             type: routeData.pathParameters['type']!,

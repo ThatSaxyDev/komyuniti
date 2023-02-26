@@ -29,6 +29,7 @@ class UserProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentTheme = ref.watch(themeNotifierProvider);
+    final userAccount = ref.watch(userProvider)!;
     return Scaffold(
       body: ref.watch(getUserProvider(uid)).when(
             data: (user) {
@@ -59,6 +60,8 @@ class UserProfileScreen extends ConsumerWidget {
                               radius: 43.w,
                             ),
                           ),
+
+                          userAccount.uid == uid ?
                           Container(
                             alignment: Alignment.bottomLeft,
                             padding: EdgeInsets.all(13.w),
@@ -76,7 +79,7 @@ class UserProfileScreen extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                          ),
+                          ) : const SizedBox.shrink(),
                         ],
                       ),
                     ),

@@ -13,6 +13,7 @@ import 'package:komyuniti/shared/app_texts.dart';
 import 'package:komyuniti/shared/widgets/error_text.dart';
 import 'package:komyuniti/shared/widgets/loader.dart';
 import 'package:komyuniti/shared/widgets/spacer.dart';
+import 'package:komyuniti/theme/palette.dart';
 
 class CommentsScreen extends ConsumerStatefulWidget {
   final String postId;
@@ -49,12 +50,16 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider)!;
     final isGuest = !user.isAuthenticated;
+    final currentTheme = ref.watch(themeNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Post',
+          style: TextStyle(
+            color: currentTheme.textTheme.bodyMedium!.color!,
+          ),
         ),
       ),
       body: ref.watch(getPostByIdProvider(widget.postId)).when(
